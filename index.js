@@ -1,65 +1,163 @@
 const inquirer = require("inquirer");
 const db = require("./db/queries");
+const connection = require("./db/connection");
 
 //write some inquirer prompts 
 const startInquirer = () => {
     inquirer
       .prompt({
-        name: "opening",
+        name: "employee",
         type: "list",
-        message: "Welcome! What would you like to do?",
+        message: "Please select one of the following",
         choices: [
-          "View all employees",
-          "View all employees by department",
-          "View all employees by manager",
-          "Add employees ",
-          "Remove employees",
-          "Update employee by role",
-          "update employee manager",
-          "Exit Application",
+        "View employees", 
+        "View departments", 
+        "View roles", 
+        "Add employee", 
+        "add department",
+        "Add role", 
+        "Update employees role", 
+        "End",
         ],
     })
     .then((answer) => {
-      switch (answer.opening) {
-        case "View all employees":
+      switch (answer.employee) {
+        case "View employees":
           viewEmployees();
-          start();
+          startInquirer();
           break;
 
-        case "View all employees by department":
-          getAllEmployeesbyDepartment();
+        case "View department":
+          viewDepartment();
           break;
 
-        case "View all employees by manager":
-          viewEmployeesByManager();
+        case "View roles":
+          viewRoles();
           break;
 
-        case "Add employees ":
+        case "Add employee":
           addEmployee();
           break;
 
-        case "Remove employees":
-          removeEmployee();
+        case "add department":
+          addDepartment();
           break;
 
-        case "Update employee by role":
-          updateEmployeesRole();
-          break;
+        case "Add role":
+          addRole();
+          break;  
 
-        case "update employee manager":
-          updateEmployeeManager();
+        case "Update employees role":
+          updateRole();
           break;
-
-        case "Exit Application":
+       
+        case "End":
           db.connection.end();
           break;
       }
     });
 };   
 
-async function viewEmployees () {
+//write add employee function
+async function addEmployee() {
+  let employee = await inquirer
+      .prompt([
+          {
+              name: 'first_name',
+              type: 'input',
+              message: 'Employee First Name:',
+
+          },
+          {
+              name: 'last_name',
+              type: 'input',
+              message: 'Employee Last Name:',
+          },
+          {
+              name: 'role_id',
+              type: 'input',
+              message: 'Role ID:',
+          },
+          {
+              name: 'manager_id',
+              type: 'input',
+              message: 'Manager ID:',
+          }
+      ]);
+
+  let employees = await db.addEmployee(employee);
+  console.log(employees.affectedRows + " employee added.");
+  runSearch();
+};
+
+//write a function to add a department
+async function addDepartment() {
+    let newDepartment = await inquirer
+        .prompt({
+            name: 'name',
+            type: 'input',
+            message: 'Please add a department',
+        })
+    let employees = await db.addDepartment(newDepartment);
+    console.log(employees.affectedRows + "Department has been added.");
+    startInquirer();
+};
+
+//write add role function
+async function addRole() {
+  let role = await inquirer
+      .prompt([
+          {
+              name: 'title',
+              type: 'input',
+              message: 'Choose a Role',
+
+          },
+          {
+              name: 'salary',
+              type: 'input',
+              message: 'Choose a Salary',
+
+          },
+          {
+              name: 'department_id',
+              type: 'input',
+              message: 'Choose a department ID',
+
+          },
+      ]);
+
+  let employeeRole = await db.addRole(role);
+  console.log(employeeRole.affectedRows + "Role has been updated.");
+  startInquirer();
+};
+
+//write a function to view employees using findall
+async function viewEmployees() {
     let employees = await db.findAllEmployees();
     console.log(employees);
-}
+    startInquirer();
+};
 
-viewEmployees();
+//write a function to view department 
+async function viewDepartment() {
+    let department = await db.viewDepartment();
+    console.log(department);
+    startInquirer();
+};
+
+//write function to view roles
+async function viewRoles() {
+  let role = await db.viewRoles();
+  console.table(role);
+  startInquirer();
+};
+
+//write a function to update role of an employee ******HOW WILL THIS DIFFER FROM ADD ROLE???********
+// async function updateRole() {
+//     let role = await db.updateRole();
+//     console.log(role);
+//     startInquirer();
+// };
+
+startInquirer();
