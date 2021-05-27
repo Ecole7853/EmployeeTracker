@@ -154,10 +154,10 @@ async function viewRoles() {
 };
 
 //write a function to update role of an employee ******HOW WILL THIS DIFFER FROM ADD ROLE???********
-// async function updateRole() {
-//     let role = await db.updateRole();
-//     console.log(role);
-//     startInquirer();
-// };
+async function updateRole() {
+    let role = await db.updateRole();
+    console.log(role);
+    startInquirer();
+};
 
 startInquirer();
