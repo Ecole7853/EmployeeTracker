@@ -87,7 +87,7 @@ async function addEmployee() {
 
   let employees = await db.addEmployee(employee);
   console.log(employees.affectedRows + " employee added.");
-  runSearch();
+  startInquirer();
 };
 
 //write a function to add a department
