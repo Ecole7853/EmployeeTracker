@@ -126,7 +126,19 @@ async function addRole() {
 
           },
       ]);
+async function employeeRoleUpdate(employees); {
+  
+  let role = await inquirer
+      .prompt([
+          {
+              name: 'employee',
+              type: 'input',
+              message: 'Enter the id of the employee you would like to update.'
+      ]);
+      .then((answer) => {
 
+        
+      }
   let employeeRole = await db.addRole(role);
   console.log(employeeRole.affectedRows + "Role has been updated.");
   startInquirer();
@@ -155,9 +167,10 @@ async function viewRoles() {
 
 //write a function to update role of an employee ******HOW WILL THIS DIFFER FROM ADD ROLE???********
 async function updateRole() {
-    let role = await db.updateRole();
-    console.log(role);
-    startInquirer();
+    let employees = await db.getEmployeeRoleData();
+    console.log(employees);
+    // employeeRoleUpdate(employees);
 };
+
 
 startInquirer();

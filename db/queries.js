@@ -39,9 +39,13 @@ class DB {
         );
     }
 
-    updateEmployeeRole() {
+    getEmployeeRoleData() {
+        return this.connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, employee.role_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT join employee manager on manager.id = employee.manager_id;");
+    }
+
+    updateRole() {
         return this.connection.query(
-            "UPDATE employee SET role_id = ?", role
+            "UPDATE employee SET role_id = ? WHERE id = ?", role_id
         );
     }
     
