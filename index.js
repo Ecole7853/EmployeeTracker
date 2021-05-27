@@ -27,7 +27,7 @@ const startInquirer = () => {
           startInquirer();
           break;
 
-        case "View department":
+        case "View departments":
           viewDepartment();
           break;
 
