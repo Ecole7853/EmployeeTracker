@@ -21,34 +21,38 @@ class DB {
         );
     }
     
-    addDepartment(department) {
+    addDepartmentId(department) {
         return this.connection.query(
             "INSERT INTO department SET ?", department
         );
     }
     
-    addRole(role) {
+    addRoleId(role) {
         return this.connection.query(
             "INSERT INTO role SET ?", role
         );
     }
     
-    addEmployee(employee) {
+    addEmployeeId(employee) {
         return this.connection.query(
             "INSERT INTO employee SET ?", employee
         );
     }
 
     getEmployeeRoleData() {
-        return this.connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, employee.role_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT join employee manager on manager.id = employee.manager_id;");
+        return this.connection.query("SELECT employee.id, employee.first_name, employee.last_name FROM employee");
     }
 
-    updateRole() {
+    updateRole(Chosen_employee, Chosen_role) {
         return this.connection.query(
-            "UPDATE employee SET role_id = ? WHERE id = ?", role_id
+            "UPDATE employee SET role_id = ? WHERE id = ?", [Chosen_role, Chosen_employee]
         );
     }
-    
+    deleteDepartments(Chosen_department) {
+        return this.connection.query(
+            "DELETE FROM department WHERE id = ?", Chosen_department
+        );
+    }
 };
 
 module.exports = new DB(connection);

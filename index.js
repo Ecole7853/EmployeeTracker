@@ -17,6 +17,7 @@ const startInquirer = () => {
         "add department",
         "Add role", 
         "Update employees role", 
+        "Delete department",
         "End",
         ],
     })
@@ -24,7 +25,6 @@ const startInquirer = () => {
       switch (answer.employee) {
         case "View employees":
           viewEmployees();
-          startInquirer();
           break;
 
         case "View departments":
@@ -49,6 +49,10 @@ const startInquirer = () => {
 
         case "Update employees role":
           updateRole();
+          break;
+        
+        case "Delete department":
+          deleteDepartment();
           break;
        
         case "End":
@@ -85,7 +89,7 @@ async function addEmployee() {
           }
       ]);
 
-  let employees = await db.addEmployee(employee);
+  let employees = await db.addEmployeeId(employee);
   console.log(employees.affectedRows + " employee added.");
   startInquirer();
 };
@@ -98,7 +102,7 @@ async function addDepartment() {
             type: 'input',
             message: 'Please add a department',
         })
-    let employees = await db.addDepartment(newDepartment);
+    let employees = await db.addDepartmentId(newDepartment);
     console.log(employees.affectedRows + "Department has been added.");
     startInquirer();
 };
@@ -126,35 +130,22 @@ async function addRole() {
 
           },
       ]);
-async function employeeRoleUpdate(employees); {
-  
-  let role = await inquirer
-      .prompt([
-          {
-              name: 'employee',
-              type: 'input',
-              message: 'Enter the id of the employee you would like to update.'
-      ]);
-      .then((answer) => {
-
-        
-      }
-  let employeeRole = await db.addRole(role);
-  console.log(employeeRole.affectedRows + "Role has been updated.");
-  startInquirer();
-};
+      let roles = await db.addRoleId(role);
+    console.log(roles.affectedRows + "Role has been added.");
+    startInquirer();
+    }
 
 //write a function to view employees using findall
 async function viewEmployees() {
     let employees = await db.findAllEmployees();
-    console.log(employees);
+    console.table(employees);
     startInquirer();
 };
 
 //write a function to view department 
 async function viewDepartment() {
     let department = await db.viewDepartment();
-    console.log(department);
+    console.table(department);
     startInquirer();
 };
 
@@ -165,12 +156,60 @@ async function viewRoles() {
   startInquirer();
 };
 
-//write a function to update role of an employee ******HOW WILL THIS DIFFER FROM ADD ROLE???********
+//write a function to update role of an employee
 async function updateRole() {
+    // let employees = await db.findAllEmployees();
     let employees = await db.getEmployeeRoleData();
-    console.log(employees);
-    // employeeRoleUpdate(employees);
-};
+    console.table(employees);
+    let allRoles = await db.viewRoles();
+    console.table(allRoles);
+    let roleList = allRoles.map(role => ({
+      value: role.id, 
+      name: role.title
+    }))
+    let employeeList = employees.map(employee => ({
+      value: employee.id, 
+      name: employee.first_name + " " + employee.last_name
+    }))
+    inquirer
+          .prompt([{
+            type: "list",
+            name: "Chosen_employee",
+            message: "Which employee would you like to update?",
+            choices: employeeList,
+          },
+        {
+          type: "list",
+          name: "Chosen_role",
+          message: "Which role would you like to choose?",
+          choices: roleList,
+        }]).then(answer => {
+          console.log(answer);
+          db.updateRole(answer.Chosen_employee, answer.Chosen_role);
+          console.log("Employee updated sucessfully!")
+          startInquirer();
+          })
+        };
+
+async function deleteDepartment() {
+  let departments = await db.viewDepartment();
+  let departmentList = departments.map(department => ({
+    value: department.id,
+    name: department.name,
+  }));
+  inquirer
+      .prompt([{
+        type: "list",
+        name: "Chosen_department",
+        message: "Which department would you like to delete",
+        choices: departmentList,
+      }]).then(answer => {
+        console.log(answer);
+        db.deleteDepartments(answer.Chosen_department)
+        console.log("Department deleted");
+        startInquirer();
+      });    
+}
 
 
 startInquirer();
