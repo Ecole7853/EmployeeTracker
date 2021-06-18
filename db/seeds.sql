@@ -1,4 +1,3 @@
---insert statements
 INSERT INTO department (name)
 VALUES 
 ("E2"), 
@@ -7,7 +6,6 @@ VALUES
 ("B2"), 
 ("F"), 
 ("C"); 
---buildings at my project
 
 INSERT INTO role (title, salary, department_id)
 VALUES 

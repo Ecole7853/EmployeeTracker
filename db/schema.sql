@@ -1,26 +1,24 @@
-DROP DATABASE IF EXISTS employees,
+DROP DATABASE IF EXISTS employees;
 
-CREATE DATABASE employees,
+CREATE DATABASE employees;
 
-USE employees,
+USE employees;
 
---department table--
 CREATE TABLE department (
-    --Your code here--
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(30),
     PRIMARY KEY (id)
-),
+);
+
 CREATE TABLE role (
-    --Your code here--
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30),
     salary DECIMAL,
     department_id INT,
     PRIMARY KEY (id)
-),
+);
+
 CREATE TABLE employee (
-    --Your code here--
     id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
